@@ -9,20 +9,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent
-DATOS = RAIZ / "datos"
-BASE = Path(os.environ.get("AURORA_DB", DATOS / "aurora.sqlite"))
-CAPA = Path(os.environ.get("AURORA_CAPA", DATOS / "capa_semantica.json"))
-PREGUNTAS = DATOS / "preguntas.json"
-INSTRUCCIONES = RAIZ / "instrucciones.txt"
-
-# Motor de la base: sqlite (archivo local, por defecto) o sqlserver (la base compartida en la nube o la del aula).
-# Se lee después de cargar .env: use motor() y sqlserver().
-
-# Topes: los pone el código, no el prompt.
-MAX_HERRAMIENTAS = 6
-MAX_LLAMADAS_MODELO = 7
-MAX_TOKENS_SALIDA = 4000      # los modelos que «piensan» gastan tokens antes de responder
-TIMEOUT_MODELO = 120.0       # un modelo local en un portátil puede tardar
 
 
 def cargar_env() -> None:
@@ -34,6 +20,23 @@ def cargar_env() -> None:
                 v = v.split(" #")[0].strip().strip('"')
                 if v:
                     os.environ.setdefault(k.strip(), v)
+
+
+cargar_env()          # AURORA_DB y AURORA_CAPA también se pueden fijar en .env
+DATOS = RAIZ / "datos"
+BASE = RAIZ / os.environ.get("AURORA_DB", DATOS / "aurora.sqlite")      # relativa a esta carpeta
+CAPA = RAIZ / os.environ.get("AURORA_CAPA", DATOS / "capa_semantica.json")
+PREGUNTAS = DATOS / "preguntas.json"
+INSTRUCCIONES = RAIZ / "instrucciones.txt"
+
+# Motor de la base: sqlite (archivo local, por defecto) o sqlserver (la base compartida en la nube o la del aula).
+# Se lee después de cargar .env: use motor() y sqlserver().
+
+# Topes: los pone el código, no el prompt.
+MAX_HERRAMIENTAS = 6
+MAX_LLAMADAS_MODELO = 7
+MAX_TOKENS_SALIDA = 4000      # los modelos que «piensan» gastan tokens antes de responder
+TIMEOUT_MODELO = 120.0       # un modelo local en un portátil puede tardar
 
 
 def motor() -> str:

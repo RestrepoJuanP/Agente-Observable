@@ -23,6 +23,7 @@ Lección interactiva que acompaña este repositorio: **[gobernanzadatos.vercel.a
 | Opinión humana | `opinar.py` | Una persona califica una respuesta; queda pegada a su traza |
 | Búsqueda | `buscar.py` | Consulta la bitácora: por persona, modelo, palabra, calidad o lentitud; o una traza paso a paso |
 | Pruebas | `pruebas/prueba_sin_red.py` | 28 pruebas sin red ni modelo |
+| Construya el suyo | `cargar_csv.py` | Un CSV a SQLite y el borrador de la capa semántica, con columnas excluidas |
 | Exportar | `exportar.py` | Corridas y trazas a un JSON liviano para un tablero |
 
 ## Instalar (una vez)
@@ -181,6 +182,29 @@ Detalle y lectura en [RESULTADOS.md](RESULTADOS.md).
 3. **Agregue una pregunta** a `datos/preguntas.json` con su `sql_referencia`. La cifra esperada nunca se escribe a mano.
 4. **Escriba un calificador** en `evaluar.py`: por ejemplo, que la respuesta mencione la fecha de corte.
 5. **Opine en desacuerdo con el código**: busque una respuesta con `cifra_correcta = sí` que usted no le creería a nadie, y regístrelo con `opinar.py`.
+
+## Construya el suyo (con sus propios datos)
+
+El agente no sabe nada de Aurora: todo lo que conoce sale de la **base** y de la **capa semántica**. Cambie las dos y tendrá un agente sobre sus datos, con el mismo guardián y las mismas trazas.
+
+```bash
+# 1. Un CSV a SQLite + el borrador de la capa (las columnas de --excluir no existirán para el agente)
+curl -O https://gobernanzadatos.vercel.app/datos/contratos-oriente-2026.csv     # o su propio CSV
+python cargar_csv.py contratos-oriente-2026.csv --tabla contratos --excluir proveedor,proveedor_id,persona,uid
+
+# 2. Abra datos/mi_capa.json y reemplace cada «COMPLETE» por lo que la columna significa.
+#    Ejemplo resuelto: ejemplos/capa_secop_oriente.json
+
+# 3. En .env
+AURORA_DB=datos/mia.sqlite
+AURORA_CAPA=datos/mi_capa.json
+
+# 4. Pregunte y mire la traza
+python agente.py "¿Cuántos contratos firmó Rionegro y qué porcentaje de su valor se ha pagado?"
+#   → 805 contratos y 18,7 % pagado (con la capa del ejemplo resuelto)
+```
+
+Para volver a Aurora, comente las dos líneas de `.env`. Si cambia de datos, cambie también la primera línea de `instrucciones.txt` (dice «Centro Aurora»): la siguiente evaluación registrará una versión nueva del prompt.
 
 ## Licencia
 

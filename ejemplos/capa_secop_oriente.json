@@ -1,0 +1,32 @@
+{
+  "version": "1.0",
+  "fuente": "contratos-oriente-2026.csv (SECOP II, Oriente antioqueño, 2026). Lo que no está aquí no se puede leer.",
+  "limite_filas": 50,
+  "corte": "2026-09-14",
+  "relaciones": [],
+  "tablas": {
+    "contratos": {
+      "descripcion": "Un contrato firmado en 2026 por una entidad pública del Oriente antioqueño.",
+      "columnas": {
+        "id": "Identificador del contrato en SECOP.",
+        "entidad": "Entidad pública que contrata.",
+        "ciudad": "Municipio de la entidad.",
+        "estado": "Estado en SECOP: En ejecución, Modificado, terminado, cedido…",
+        "tipo_contrato": "Prestación de servicios, Suministros, Obra…",
+        "modalidad": "Cómo se escogió al contratista: Contratación directa, Mínima cuantía, Licitación pública…",
+        "objeto": "Qué se contrató, en texto libre.",
+        "fecha_firma": "AAAA-MM-DD.",
+        "valor": "Valor CONTRATADO en pesos colombianos.",
+        "valor_pagado": "Lo pagado hasta el corte, en pesos."
+      },
+      "reglas": [
+        "Excluya los contratos con valor = 0: son registros incompletos.",
+        "Para porcentajes multiplique por 100.0 (no 100).",
+        "El municipio está en ciudad; escriba el nombre con mayúscula inicial y tildes, por ejemplo 'Rionegro', 'Peñol'."
+      ],
+      "ejemplos": [
+        {"pregunta": "¿Cuántos contratos firmó Marinilla?", "sql": "SELECT COUNT(*) AS n FROM contratos WHERE ciudad = 'Marinilla' AND valor > 0"}
+      ]
+    }
+  }
+}

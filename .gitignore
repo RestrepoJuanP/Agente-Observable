@@ -6,3 +6,26 @@ mlruns/
 mlartifacts/
 datos/aurora.sqlite
 .DS_Store
+
+# Entorno y secretos
+.env.*
+!.env.example
+
+# Bases locales (incluye datos/mia.sqlite de cargar_csv.py)
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Salidas de los scripts
+resultados*.json
+datos/mi_capa.json
+
+# Python
+*.py[cod]
+.pytest_cache/
+
+# Editor y sistema
+.vscode/
+.idea/
+Thumbs.db
